@@ -91,3 +91,10 @@ li:hover {
     text-decoration: underline;
     cursor: pointer;
 }
+
+
+
+.image {
+	height: 100%;
+	width: 100%;
+}
