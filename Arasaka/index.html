@@ -53,23 +53,31 @@ We are in the business of promoting just such ideas, and we sincerely believe th
 
 
 	</div>
-	<div class="statment">
-	<img class="image" id="img" src="">
-	<div class="audio-container">
-		<audio id="audioPlayer" controls >
 
-			<source id="audiosrc" src=''>
+<div class="statment">	
 
-		</audio>
-	<ul id="playlist">
-	 <li data-src="C:\Users\muresa\Desktop\super secret project\Arasaka\Audio/town.mp3">Town</li>
-	 <li data-src="C:\Users\muresa\Desktop\super secret project\Arasaka\Audio/onestop.mp3">One Stop</li>
-	 <li data-src="C:\Users\muresa\Desktop\super secret project\Arasaka\Audio/flourish.mp3">Flourish</li>
-	</ul>
-	<div id="next">Next</div>
-	<div id="previous">Previous</div>
-	</div>
-	</div>
+
+ <div id="audio-container" class="audio-container" draggable="true">
+<div class="image-list">
+  <img class="image" id="img" src="" alt="image">
+    <audio id="audioPlayer">
+      <source id="audiosrc" src=''>
+     </audio>
+     <ul id="playlist">
+      <li data-src="Audio/town.mp3">Town</li>
+      <li data-src="Audio/onestop.mp3">One Stop</li>
+      <li data-src="Audio/flourish.mp3">Flourish</li>
+     </ul>
+</div>
+<div class="controls">
+     <h2 id="play">»</h2>
+     <h2 id="stop">||</h2>
+     <h2 id="previous">←</h2>
+     <h2 id="next">→</h2>
+</div>
+ </div>
+
+</div>
 	
 </body>
 
