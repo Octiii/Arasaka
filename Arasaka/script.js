@@ -5,6 +5,7 @@ document.addEventListener('DOMContentLoaded', init, false);
 function init() {
 //Grabs DOM elements.
 const audioPlayer = document.getElementById('audioPlayer');
+const audioContainer = document.getElementById('audio-container');
 const audiosrc = document.getElementById('audiosrc');
 const playlist = document.getElementById('playlist');
 const tracks = document.getElementsByTagName('li'); 
@@ -16,30 +17,45 @@ let i = 0;
 
 //Add Dragability to the audio container.
 
-const audioContainer = document.getElementById('audio-container');
+let audioContainerCoords = audioContainer.getBoundingClientRect();
+console.log(audioContainerCoords);
+//Remeber to feed e into a function that will handle the event listner!
+//Initial position of the mouse when the event is fiered, Mouse coordonates X and Y, mX and mY.
+	let mX;
+	let mY;
+//Initial position of Audio player window coordonates, wX and WY.
+	let wX;
+	let wY;
+//Function to update the coordonate variables for the initial position.
+	let dragFlag = false;
 
-audioContainer.addEventListener('dragstart', (event) => {
-  // Store the initial position
-  event.dataTransfer.setData('text/plain', JSON.stringify({
-    offsetX: event.offsetX,
-    offsetY: event.offsetY
-  }));
+audioContainer.addEventListener('mousedown', function (e) {
+	mX = e.clientX;
+	mY = e.clientY;
+	wX = audioContainerCoords.x;
+	wY = audioContainerCoords.y;
+	console.log(audioContainerCoords);
+	console.log(e);
+	dragFlag = true;
 });
 
-document.addEventListener('dragover', (event) => {
-  event.preventDefault(); // Allow drop
+audioContainer.addEventListener('mouseup', function () {
+	dragFlag = false; 
 });
 
-document.addEventListener('drop', (event) => {
-  event.preventDefault();
-  const offset = JSON.parse(event.dataTransfer.getData('text/plain'));
-  const x = event.clientX - offset.offsetX;
-  const y = event.clientY - offset.offsetY;
-  audioContainer.style.position = 'absolute';
-  audioContainer.style.left = `${x}px`;
-  audioContainer.style.top = `${y}px`;
-});
+audioContainer.addEventListener('mousemove', function (e) {
+	if (dragFlag) {
+	coordX = e.clientX - mX;
+	coordY = e.clientY - mY;
+	audioContainer.style.position = 'absolute';
+	audioContainer.style.left = wX + coordX + 'px';
+	audioContainer.style.top = wY + coordY + 'px';
+	console.log(audioContainerCoords);
+	console.log(e.clientX - mX);
+	console.log(e.clientY - mY);
+};
 
+});
 
 const tracksArray = Array.from(tracks);
 //Creates srcArray from taking the src data from the list items in the DOM. 
