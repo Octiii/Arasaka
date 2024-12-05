@@ -5,6 +5,7 @@ document.addEventListener('DOMContentLoaded', init, false);
 function init() {
     // Grabs DOM elements.
     const audioPlayer = document.getElementById('audioPlayer');
+    audioPlayer.volume = 0.1;
     const audioContainer = document.getElementById('audio-container');
     const audiosrc = document.getElementById('audiosrc');
     const playlist = document.getElementById('playlist');
@@ -41,6 +42,43 @@ function init() {
         progressBar.style.width = `${progressPercent}%`;
     });
 
+//Volume bar------------------------------------------------------------------------------------
+	
+	let isVolumeSliderActive = false;
+
+	const volume = document.getElementById('volumeBar');	
+	console.dir(volume);
+
+
+	volume.addEventListener('mousedown', function() {
+	isVolumeSliderActive = true;
+});
+	volume.addEventListener('mouseup', function() {
+	isVolumeSliderActive = false;
+});
+	volume.addEventListener('mouseleave', function() {
+	isVolumeSliderActive = false;
+});
+
+	volume.addEventListener("input", (e) => {
+	console.log(e.target.value);
+	audioPlayer.volume = e.target.value;
+});
+
+	let volumeValue = 0;
+	volume.addEventListener('wheel', (e) => {
+	e.preventDefault();
+	volumeValue += (e.deltaY > 0 ? -0.1 : 0.1);
+	volumeValue = parseFloat(volumeValue.toFixed(1));
+	volumeValue = Math.max(0, Math.min(1, volumeValue));
+	console.log(volumeValue);
+	audioPlayer.volume = volumeValue;
+	volume.value = volumeValue;
+});
+	
+
+
+
 // Add Dragability to the audio container.------------------------------------------------------
     let audioContainerCoords;
     let mX, mY, wX, wY;
@@ -60,7 +98,7 @@ function init() {
     });
 
     audioContainer.addEventListener('mousemove', function (e) {
-        if (dragFlag) {
+        if (dragFlag && !isVolumeSliderActive) {
             let coordX = e.clientX - mX;
             let coordY = e.clientY - mY;
             audioContainer.style.position = 'absolute';
@@ -86,7 +124,6 @@ function init() {
     for (let track of tracks) {
         track.addEventListener('click', function() {
             audiosrc.src = this.getAttribute('data-src');
-            audioPlayer.volume = 0.1;
             audioPlayer.load();
             audioPlayer.play().catch(error => {
                 console.error('Failed to play audio:', error);
@@ -110,15 +147,13 @@ function init() {
         audioPlayer.play().catch(error => {
             console.error('Failed to play audio:', error);
         });
-        audioPlayer.volume = 0.1;
-		audioPlayer.addEventListener('loadedmetadata', updateDuration);
+	audioPlayer.addEventListener('loadedmetadata', updateDuration);
     }
 
     play.addEventListener('click', function() { 
         audioPlayer.play().catch(error => {
             console.error('Failed to play audio:', error);
         });
-        audioPlayer.volume = 0.1;
     });
 
     const stop = document.getElementById("stop");
