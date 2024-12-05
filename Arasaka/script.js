@@ -14,7 +14,7 @@ function init() {
     const srcArray = [];
     let i = 0;
 
-    // Time stamps!-----------------------------------------------------------------------------
+// Time stamps!-----------------------------------------------------------------------------
     let duration = document.getElementById('duration');
     function updateDuration() {
         const currentTime = Math.floor(audioPlayer.duration);
@@ -35,9 +35,13 @@ function init() {
         const seconds = currentTime % 60;
         const formattedTime = minutes + ":" + (seconds < 10 ? '0' : '' ) + seconds;
         currentDuration.innerText = formattedTime; 
+    //--------------------------------Progress Bar-----------------------
+	const duration = audioPlayer.duration;
+        const progressPercent = (currentTime / duration) * 100;
+        progressBar.style.width = `${progressPercent}%`;
     });
 
-    // Add Dragability to the audio container.
+// Add Dragability to the audio container.------------------------------------------------------
     let audioContainerCoords;
     let mX, mY, wX, wY;
     let dragFlag = false;
