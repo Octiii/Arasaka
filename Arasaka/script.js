@@ -16,7 +16,12 @@ function init() {
     let i = 0;
 
 // Time stamps!-----------------------------------------------------------------------------
-    let duration = document.getElementById('duration');
+
+
+    // Add event listener to load the meta data to ensure timestamps are updated correctly.
+    audioPlayer.addEventListener('loadedmetadata', updateDuration);
+
+let duration = document.getElementById('duration');
     function updateDuration() {
         const currentTime = Math.floor(audioPlayer.duration);
         const minutes = Math.floor(currentTime / 60);
@@ -25,29 +30,28 @@ function init() {
         audioPlayer.removeEventListener('loadedmetadata', updateDuration);
     }
 
-    // Add event listener to load the meta data to ensure timestamps are updated correctly.
-    audioPlayer.addEventListener('loadedmetadata', updateDuration);
 
     // Time go up. 
     let currentDuration = document.getElementById('currentDuration');
     audioPlayer.addEventListener('timeupdate', function() {
-        const currentTime = Math.floor(audioPlayer.currentTime);
+	const currentTime = Math.floor(audioPlayer.currentTime);
         const minutes = Math.floor(currentTime / 60);
         const seconds = currentTime % 60;
         const formattedTime = minutes + ":" + (seconds < 10 ? '0' : '' ) + seconds;
         currentDuration.innerText = formattedTime; 
-    //--------------------------------Progress Bar-----------------------
-	const duration = audioPlayer.duration;
-        const progressPercent = (currentTime / duration) * 100;
-        progressBar.style.width = `${progressPercent}%`;
     });
+
+
+
+
+
+
 
 //Volume bar------------------------------------------------------------------------------------
 	
 	let isVolumeSliderActive = false;
 
 	const volume = document.getElementById('volumeBar');	
-	console.dir(volume);
 
 
 	volume.addEventListener('mousedown', function() {
@@ -65,12 +69,12 @@ function init() {
 	audioPlayer.volume = e.target.value;
 });
 
-	let volumeValue = 0;
+	let volumeValue = 0.1;
 	volume.addEventListener('wheel', (e) => {
 	e.preventDefault();
-	volumeValue += (e.deltaY > 0 ? -0.1 : 0.1);
-	volumeValue = parseFloat(volumeValue.toFixed(1));
-	volumeValue = Math.max(0, Math.min(1, volumeValue));
+	volumeValue += (e.deltaY > 0 ? -0.01 : 0.01);
+	volumeValue = parseFloat(volumeValue.toFixed(2));
+	volumeValue = Math.max(0, Math.min(2, volumeValue));
 	console.log(volumeValue);
 	audioPlayer.volume = volumeValue;
 	volume.value = volumeValue;
@@ -106,7 +110,7 @@ function init() {
             audioContainer.style.top = wY + coordY + 'px';
             // Update audioContainerCoords after moving
             audioContainerCoords = audioContainer.getBoundingClientRect();
-            console.log(audioContainerCoords);
+            //console.log(audioContainerCoords);
         }
     });
 
@@ -154,8 +158,20 @@ function init() {
         audioPlayer.play().catch(error => {
             console.error('Failed to play audio:', error);
         });
-    });
+    });	
+//--------------------------------Progress Bar-----------------------
+    function updateProgressBar() {
+  let barProgress = audioPlayer.currentTime;
+  let barDuration = audioPlayer.duration;
+  let barPercent = (barProgress / barDuration) *100;
+  progressBar.style.width = `${barPercent}%`;
+  requestAnimationFrame(updateProgressBar);
+}
 
+audioPlayer.addEventListener('play', () => {
+  requestAnimationFrame(updateProgressBar);
+});
+//-------------------------------------------------------------------
     const stop = document.getElementById("stop");
     stop.addEventListener('click', function(){
         audioPlayer.pause();
@@ -198,6 +214,9 @@ function init() {
         }
     }
 }
+
+
+
 
 
 
